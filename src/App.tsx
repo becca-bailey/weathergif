@@ -40,10 +40,6 @@ const forecastMatchers: ForecastMatcher[] = [
   {
     searchTerm: "cloudy",
     match: ({ summary }) => summary.toLowerCase().includes("cloudy")
-  },
-  {
-    searchTerm: "weather",
-    match: () => true
   }
 ];
 
