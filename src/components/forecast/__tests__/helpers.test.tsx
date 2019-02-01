@@ -1,21 +1,11 @@
-import { getSearchTerms, TemperatureMatcher } from "../helpers";
+import { getSearchTerms, ForecastMatcher } from "../helpers";
 
 describe("getSearchTerms", () => {
-  it("adds the precipitation if it exists", () => {
-    const forecast = {
-      summary: "Raining",
-      precipType: "rain",
-      temperature: 40
-    };
-
-    expect(getSearchTerms(forecast)).toContain("rain");
-  });
-
-  it("adds search term based on temperature matchers", () => {
-    const temperatureMap: TemperatureMatcher[] = [
+  it("adds search term based on matchers", () => {
+    const temperatureMap: ForecastMatcher[] = [
       {
         searchTerm: "arctic",
-        match: temperature => temperature < 0
+        match: ({ temperature }) => temperature < 0
       }
     ];
 
@@ -31,5 +21,29 @@ describe("getSearchTerms", () => {
 
     expect(getSearchTerms(forecast1, temperatureMap)).toContain("arctic");
     expect(getSearchTerms(forecast2, temperatureMap)).toHaveLength(0);
+  });
+
+  it("adds multiple search terms", () => {
+    const temperatureMap: ForecastMatcher[] = [
+      {
+        searchTerm: "freezing",
+        match: ({ temperature }) => temperature <= 32
+      },
+      {
+        searchTerm: "rain",
+        match: ({ precipType }) => precipType === "rain"
+      }
+    ];
+
+    const forecast = {
+      summary: "Chicago weather",
+      temperature: 12,
+      precipType: "rain"
+    };
+
+    expect(getSearchTerms(forecast, temperatureMap)).toEqual([
+      "freezing",
+      "rain"
+    ]);
   });
 });

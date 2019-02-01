@@ -13,7 +13,7 @@ const TestComponent: React.SFC<GetGifState> = ({ loading, error, data }) => {
     return <div>{error.message}</div>;
   }
   if (data) {
-    return <div>{data.url}</div>;
+    return <div>{data.images.original.url}</div>;
   }
   return <div>No data returned</div>;
 };
@@ -30,11 +30,9 @@ describe("GetGif", () => {
     expect(container.innerHTML).toContain("Loading...");
   });
 
-  it("returns the url of the first search result", async () => {
+  it("returns the data for the first search result", async () => {
     const { container } = render(
-      <GetGif searchTerms={[]} size="original">
-        {props => <TestComponent {...props} />}
-      </GetGif>
+      <GetGif searchTerms={[]}>{props => <TestComponent {...props} />}</GetGif>
     );
 
     await wait();

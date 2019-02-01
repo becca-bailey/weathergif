@@ -1,24 +1,21 @@
 import { Forecast } from "./GetForecast";
 
-export type TemperatureMatcher = {
+export type ForecastMatcher = {
   searchTerm: string;
-  match(temperature: number): boolean;
+  match(forecast: Forecast): boolean;
 };
 
 export function getSearchTerms(
   forecast: Forecast,
-  temperatureMatchers?: TemperatureMatcher[]
+  matchers: ForecastMatcher[]
 ) {
-  const searchTerms = [];
-  if (forecast.precipType) {
-    searchTerms.push(forecast.precipType);
-  }
-  if (temperatureMatchers) {
-    temperatureMatchers.forEach(matcher => {
-      if (matcher.match(forecast.temperature)) {
-        searchTerms.push(matcher.searchTerm);
+  return matchers.reduce(
+    (prevSearchTerms, matcher) => {
+      if (matcher.match(forecast)) {
+        prevSearchTerms.push(matcher.searchTerm);
       }
-    });
-  }
-  return searchTerms;
+      return prevSearchTerms;
+    },
+    [] as string[]
+  );
 }
