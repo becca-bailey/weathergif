@@ -51,39 +51,49 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <h1>WeatherGif</h1>
-        <GetForecast {...cities["chicago"]}>
-          {({ loading, error, data }) => {
-            if (loading) {
-              return <Loading />;
-            }
-            if (error) {
-              return <div className="error">{error.message}</div>;
-            }
-            if (data) {
-              return (
-                <GetGif searchTerms={getSearchTerms(data, forecastMatchers)}>
-                  {({ loading, error, data }) => {
-                    if (loading) {
-                      return <Loading />;
-                    }
-                    if (error) {
-                      return <div className="error">{error.message}</div>;
-                    }
-                    if (data) {
-                      return (
-                        <div className="image-container">
-                          <img src={data.images.original.url} alt={data.slug} />
-                        </div>
-                      );
-                    }
-                    return <div>No data returned from search</div>;
-                  }}
-                </GetGif>
-              );
-            }
-          }}
-        </GetForecast>
+        <main className="container">
+          <h1 className="app-title">WeatherGif</h1>
+          <p className="description">What is the weather like right now?</p>
+          <GetForecast {...cities["chicago"]}>
+            {({ loading, error, data }) => {
+              if (loading) {
+                return <Loading />;
+              }
+              if (error) {
+                return <div className="error">{error.message}</div>;
+              }
+              if (data) {
+                const searchTerms = getSearchTerms(data, forecastMatchers);
+                return (
+                  <GetGif searchTerms={searchTerms}>
+                    {({ loading, error, data }) => {
+                      if (loading) {
+                        return <Loading />;
+                      }
+                      if (error) {
+                        return <div className="error">{error.message}</div>;
+                      }
+                      if (data) {
+                        return (
+                          <React.Fragment>
+                            <div className="image-container">
+                              <img
+                                src={data.images.original.url}
+                                alt={data.slug}
+                              />
+                            </div>
+                            <p>Search terms: {searchTerms.join(", ")}</p>
+                          </React.Fragment>
+                        );
+                      }
+                      return <div>No data returned from search</div>;
+                    }}
+                  </GetGif>
+                );
+              }
+            }}
+          </GetForecast>
+        </main>
       </div>
     );
   }
