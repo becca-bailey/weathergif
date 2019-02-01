@@ -3,14 +3,16 @@ import axios from "axios";
 
 const API_KEY = process.env.REACT_APP_GIPHY_KEY;
 
-type GetGifState = {
+export type GetGifState = {
   loading: boolean;
   data?: any;
   error?: Error;
 };
 
-type GetGifProps = {
+export type GetGifProps = {
   searchTerms: string[];
+  size?: string;
+  index?: number;
   children(props: GetGifState): React.ReactNode;
 };
 
@@ -22,14 +24,15 @@ class GetGif extends React.Component<GetGifProps, GetGifState> {
   };
 
   async componentDidMount() {
-    const { searchTerms } = this.props;
+    const { searchTerms, size = "original", index = 0 } = this.props;
     const url = `/gifs/search`;
     try {
       const { data } = await axios.get(url, {
         params: { api_key: API_KEY, q: searchTerms }
       });
+      const imageData = data.data[index].images[size];
       return this.setState({
-        data: data.data[0],
+        data: imageData,
         loading: false
       });
     } catch (error) {
