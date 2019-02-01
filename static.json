@@ -1,0 +1,10 @@
+{
+  "proxies": {
+    "/forecast": {
+      "origin": "https://api.darksky.net/"
+    },
+    "/gifs": {
+      "origin": "https://api.giphy.com/v1"
+    }
+  }
+}
