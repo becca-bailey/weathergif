@@ -4,11 +4,11 @@
     "/**": "index.html"
   },
   "proxies": {
-    "/forecast": {
-      "origin": "https://api.darksky.net/"
+    "/forecast/": {
+      "origin": "https://api.darksky.net/forecast"
     },
-    "/gifs": {
-      "origin": "https://api.giphy.com/v1"
+    "/gifs/": {
+      "origin": "https://api.giphy.com/v1/gifs"
     }
   }
 }
